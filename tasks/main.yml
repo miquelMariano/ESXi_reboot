@@ -1,0 +1,39 @@
+---
+# tasks file for ESXi_reboot
+
+- name: Enter maintenance mode across vCenter
+  local_action:
+    module: vmware_maintenancemode
+    hostname: {{ vc }}
+    username: {{ vc_user }}
+    password: {{ vc_pass }}
+    esxi_hostname: "{{ inventory_hostname }}.{{ domain }}"
+#    vsan: ensureObjectAccessibility
+    evacuate: yes
+#    timeout: 3600
+    state: present
+
+- name: Reboot host
+  command: esxcli system shutdown reboot -d 10 -r Ansible
+
+- pause: seconds=10
+
+- name: Waiting stop host
+  local_action: wait_for host={{ inventory_hostname }} state=stopped port=22 delay=10
+
+- pause: seconds=600
+
+- name: Waiting start host
+  local_action: wait_for host={{ inventory_hostname }} state=started port=22 delay=10
+
+- command: uptime
+  register: uptime
+
+- name: Uptime
+  debug: var=uptime.stdout_lines
+
+- pause: seconds=60
+
+- name: Exit maintenance mode
+  command: esxcli system maintenanceMode set --enable false
+
