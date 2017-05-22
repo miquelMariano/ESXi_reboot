@@ -4,9 +4,9 @@
 - name: Enter maintenance mode across vCenter
   local_action:
     module: vmware_maintenancemode
-    hostname: {{ vc }}
-    username: {{ vc_user }}
-    password: {{ vc_pass }}
+    hostname: "{{ vc }}"
+    username: "{{ vc_user }}"
+    password: "{{ vc_pass }}"
     esxi_hostname: "{{ inventory_hostname }}.{{ domain }}"
 #    vsan: ensureObjectAccessibility
     evacuate: yes
