@@ -3,6 +3,6 @@
 
 
 vc: vcenter65.ncoraformacion.local
-vc_username: miquel.mariano
+vc_user: miquel.mariano
 vc_pass: Secret123!
 
